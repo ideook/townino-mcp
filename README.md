@@ -1,4 +1,4 @@
-# Townino GPT App
+# Townino MCP
 
 Mock-data ChatGPT App that recommends neighborhood places and renders them in an interactive widget.
 
