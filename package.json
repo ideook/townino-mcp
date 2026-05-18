@@ -1,0 +1,22 @@
+{
+  "name": "townino-gpt-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mock-data ChatGPT App for neighborhood place discovery.",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check src/townino-app.js && node --check server.js && node --check api/mcp.js && node --check api/health.js && node --check api/preview.js && node --check api/index.js && node --check scripts/smoke-test.mjs && node --check scripts/visual-check.mjs",
+    "smoke": "node scripts/smoke-test.mjs",
+    "visual": "node scripts/visual-check.mjs",
+    "vercel:dev": "vercel dev --listen 8790"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "^1.0.1",
+    "@modelcontextprotocol/sdk": "^1.20.2",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}

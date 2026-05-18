@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/mcp", "destination": "/api/mcp" },
+    { "source": "/health", "destination": "/api/health" },
+    { "source": "/preview", "destination": "/api/preview" },
+    { "source": "/", "destination": "/api" }
+  ],
+  "functions": {
+    "api/mcp.js": {
+      "maxDuration": 60,
+      "includeFiles": "public/townino-widget.html"
+    },
+    "api/preview.js": {
+      "includeFiles": "public/townino-widget.html"
+    },
+    "api/index.js": {
+      "includeFiles": "public/townino-widget.html"
+    }
+  }
+}

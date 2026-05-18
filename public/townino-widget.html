@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Townino Local Picks</title>
+    <style>
+      :root {
+        color: #17211c;
+        background: #f5f2eb;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        min-height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background: #f5f2eb;
+        padding: 16px;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .shell {
+        width: min(100%, 920px);
+        margin: 0 auto;
+        display: grid;
+        gap: 14px;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        gap: 12px;
+      }
+
+      .eyebrow {
+        margin: 0 0 4px;
+        color: #516057;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(22px, 4vw, 34px);
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+
+      .note {
+        margin: 7px 0 0;
+        color: #516057;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .count {
+        min-width: 88px;
+        height: 44px;
+        border: 1px solid #bcc7be;
+        background: #fffaf1;
+        color: #17211c;
+        display: grid;
+        place-items: center;
+        font-weight: 800;
+        border-radius: 8px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(150px, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .chips {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .chip,
+      .action {
+        min-height: 38px;
+        border: 1px solid #b7c2ba;
+        background: #fffaf1;
+        color: #17211c;
+        border-radius: 8px;
+        padding: 8px 11px;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+
+      .chip[aria-pressed="true"] {
+        border-color: #236b4e;
+        background: #1f6a4d;
+        color: #ffffff;
+      }
+
+      .action {
+        background: #243d3a;
+        color: #ffffff;
+        border-color: #243d3a;
+        font-weight: 700;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .card {
+        min-width: 0;
+        min-height: 228px;
+        border: 1px solid #c9d0c7;
+        background: #fffdf7;
+        border-radius: 8px;
+        padding: 14px;
+        display: grid;
+        align-content: space-between;
+        gap: 14px;
+      }
+
+      .meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        color: #516057;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #e6efe6;
+        color: #1f5a43;
+        white-space: nowrap;
+      }
+
+      .closed {
+        background: #f0e0dc;
+        color: #8a3329;
+      }
+
+      .card h2 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.2;
+        letter-spacing: 0;
+      }
+
+      .summary {
+        margin: 8px 0 0;
+        color: #3e4a43;
+        font-size: 14px;
+        line-height: 1.45;
+      }
+
+      .facts {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .fact {
+        min-width: 0;
+        border-top: 1px solid #d8ddd6;
+        padding-top: 7px;
+      }
+
+      .fact span {
+        display: block;
+        color: #6a766f;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .fact strong {
+        display: block;
+        margin-top: 2px;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .tag {
+        border: 1px solid #d8ddd6;
+        border-radius: 999px;
+        padding: 4px 7px;
+        color: #445148;
+        font-size: 12px;
+      }
+
+      .empty {
+        min-height: 200px;
+        border: 1px dashed #aeb9b0;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        color: #516057;
+        background: #fffaf1;
+      }
+
+      @media (max-width: 760px) {
+        body {
+          padding: 12px;
+        }
+
+        .topbar,
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .count {
+          width: 100%;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .chips {
+          flex-wrap: wrap;
+          overflow-x: visible;
+        }
+
+        .card {
+          min-height: 210px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar">
+        <div>
+          <p class="eyebrow">Townino mock guide</p>
+          <h1 id="title">Townino Local Picks</h1>
+          <p class="note" id="note">A visual shortlist from mock neighborhood data.</p>
+        </div>
+        <div class="count" id="count">0 picks</div>
+      </section>
+
+      <section class="toolbar">
+        <div class="chips" id="chips" aria-label="Category filters"></div>
+        <button class="action" id="route-button" type="button">Plan route</button>
+      </section>
+
+      <section class="grid" id="grid" aria-live="polite"></section>
+    </main>
+
+    <script type="module">
+      const fallbackData = {
+        title: "Townino Local Picks",
+        note: "Preview mode uses mock place data. In ChatGPT, this updates from tool results.",
+        resultCount: 5,
+        places: [
+          {
+            id: "place-arc-roast",
+            name: "Arc Roast Lab",
+            category: "coffee",
+            district: "Seongsu",
+            summary:
+              "Quiet roastery with filter flights, long tables, and a calm afternoon crowd.",
+            tags: ["coffee", "quiet", "solo", "design"],
+            rating: 4.8,
+            price: "$$",
+            walkMinutes: 8,
+            openNow: true,
+            bestFor: "Reading, solo work, slow coffee",
+          },
+          {
+            id: "place-namu-table",
+            name: "Namu Table",
+            category: "food",
+            district: "Yeonnam",
+            summary:
+              "Small Korean lunch table known for seasonal rice bowls and banchan refills.",
+            tags: ["lunch", "korean", "casual", "seasonal"],
+            rating: 4.6,
+            price: "$$",
+            walkMinutes: 12,
+            openNow: true,
+            bestFor: "Casual lunch, quick dinner",
+          },
+          {
+            id: "place-mono-house",
+            name: "Mono House Gallery",
+            category: "culture",
+            district: "Hannam",
+            summary:
+              "Compact independent gallery with rotating photography and object design shows.",
+            tags: ["gallery", "photo", "design", "date"],
+            rating: 4.5,
+            price: "$",
+            walkMinutes: 18,
+            openNow: false,
+            bestFor: "Short culture stop, design browsing",
+          },
+          {
+            id: "place-river-loop",
+            name: "River Loop Deck",
+            category: "outdoors",
+            district: "Mangwon",
+            summary: "Open riverside deck with sunset views, benches, and nearby bike rental.",
+            tags: ["walk", "sunset", "river", "free"],
+            rating: 4.7,
+            price: "$",
+            walkMinutes: 22,
+            openNow: true,
+            bestFor: "Sunset walks, low-cost plans",
+          },
+          {
+            id: "place-maker-desk",
+            name: "Maker Desk",
+            category: "workspace",
+            district: "Mapo",
+            summary:
+              "Day-pass workspace with phone booths, fast Wi-Fi, and a simple espresso bar.",
+            tags: ["work", "wifi", "meetings", "coffee"],
+            rating: 4.3,
+            price: "$$",
+            walkMinutes: 6,
+            openNow: true,
+            bestFor: "Focused work, calls, half-day desk",
+          },
+        ],
+      };
+
+      const categories = ["all", "coffee", "food", "culture", "outdoors", "workspace"];
+      const titleEl = document.querySelector("#title");
+      const noteEl = document.querySelector("#note");
+      const countEl = document.querySelector("#count");
+      const gridEl = document.querySelector("#grid");
+      const chipsEl = document.querySelector("#chips");
+      const routeButton = document.querySelector("#route-button");
+
+      let activeCategory = "all";
+      let latestData = fallbackData;
+      let rpcId = 0;
+      const pendingRequests = new Map();
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;");
+      }
+
+      function filteredPlaces() {
+        const places = Array.isArray(latestData.places) ? latestData.places : [];
+        if (activeCategory === "all") return places;
+        return places.filter((place) => place.category === activeCategory);
+      }
+
+      function renderChips() {
+        chipsEl.innerHTML = categories
+          .map(
+            (category) =>
+              `<button class="chip" type="button" data-category="${category}" aria-pressed="${
+                category === activeCategory
+              }">${category}</button>`
+          )
+          .join("");
+      }
+
+      function renderCards() {
+        const places = filteredPlaces();
+        titleEl.textContent = latestData.title || "Townino Local Picks";
+        noteEl.textContent = latestData.note || "Mock neighborhood recommendations.";
+        countEl.textContent = `${places.length} ${places.length === 1 ? "pick" : "picks"}`;
+
+        if (places.length === 0) {
+          gridEl.innerHTML = '<div class="empty">No picks match this filter.</div>';
+          return;
+        }
+
+        gridEl.innerHTML = places
+          .map(
+            (place) => `
+              <article class="card" data-place-id="${escapeHtml(place.id)}">
+                <div>
+                  <div class="meta">
+                    <span>${escapeHtml(place.district)} / ${escapeHtml(place.category)}</span>
+                    <span class="badge ${place.openNow ? "" : "closed"}">${
+              place.openNow ? "Open" : "Closed"
+            }</span>
+                  </div>
+                  <h2>${escapeHtml(place.name)}</h2>
+                  <p class="summary">${escapeHtml(place.summary)}</p>
+                </div>
+                <div>
+                  <div class="facts">
+                    <div class="fact"><span>Rating</span><strong>${escapeHtml(
+                      place.rating
+                    )}</strong></div>
+                    <div class="fact"><span>Walk</span><strong>${escapeHtml(
+                      place.walkMinutes
+                    )} min</strong></div>
+                    <div class="fact"><span>Price</span><strong>${escapeHtml(
+                      place.price
+                    )}</strong></div>
+                  </div>
+                  <div class="tags">
+                    ${place.tags
+                      .slice(0, 4)
+                      .map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`)
+                      .join("")}
+                  </div>
+                </div>
+              </article>
+            `
+          )
+          .join("");
+      }
+
+      function render() {
+        renderChips();
+        renderCards();
+      }
+
+      function applyToolResult(result) {
+        const structured = result?.structuredContent;
+        if (!structured || !Array.isArray(structured.places)) return;
+        latestData = structured;
+        activeCategory = "all";
+        render();
+      }
+
+      function rpcNotify(method, params) {
+        window.parent.postMessage({ jsonrpc: "2.0", method, params }, "*");
+      }
+
+      function rpcRequest(method, params) {
+        return new Promise((resolve, reject) => {
+          const id = ++rpcId;
+          pendingRequests.set(id, { resolve, reject });
+          window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, "*");
+        });
+      }
+
+      async function initializeBridge() {
+        if (window.parent === window) return false;
+        try {
+          await rpcRequest("ui/initialize", {
+            appInfo: { name: "townino-widget", version: "0.1.0" },
+            appCapabilities: {},
+            protocolVersion: "2026-01-26",
+          });
+          rpcNotify("ui/notifications/initialized", {});
+          return true;
+        } catch (error) {
+          console.error("MCP Apps bridge initialization failed", error);
+          return false;
+        }
+      }
+
+      const bridgeReady = initializeBridge();
+
+      window.addEventListener(
+        "message",
+        (event) => {
+          if (event.source !== window.parent) return;
+          const message = event.data;
+          if (!message || message.jsonrpc !== "2.0") return;
+
+          if (typeof message.id === "number") {
+            const pending = pendingRequests.get(message.id);
+            if (!pending) return;
+            pendingRequests.delete(message.id);
+            if (message.error) pending.reject(message.error);
+            else pending.resolve(message.result);
+            return;
+          }
+
+          if (message.method === "ui/notifications/tool-result") {
+            applyToolResult(message.params);
+          }
+        },
+        { passive: true }
+      );
+
+      chipsEl.addEventListener("click", async (event) => {
+        const button = event.target.closest("button[data-category]");
+        if (!button) return;
+        const category = button.dataset.category;
+        activeCategory = category;
+        render();
+
+        const ready = await bridgeReady;
+        if (!ready || category === "all") return;
+
+        try {
+          const response = await rpcRequest("tools/call", {
+            name: "search_places",
+            arguments: { category, limit: 5 },
+          });
+          applyToolResult(response);
+        } catch (error) {
+          console.error("Failed to call search_places", error);
+        }
+      });
+
+      routeButton.addEventListener("click", async () => {
+        const names = filteredPlaces()
+          .slice(0, 4)
+          .map((place) => place.name)
+          .join(", ");
+        const message = names
+          ? `Plan a relaxed 2-hour walking route using these Townino picks: ${names}.`
+          : "Plan a relaxed 2-hour walking route using Townino picks.";
+
+        const ready = await bridgeReady;
+        if (!ready) return;
+        rpcNotify("ui/message", {
+          role: "user",
+          content: [{ type: "text", text: message }],
+        });
+      });
+
+      render();
+    </script>
+  </body>
+</html>
