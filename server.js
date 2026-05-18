@@ -24,12 +24,17 @@ const httpServer = createServer(async (req, res) => {
   }
 
   if (req.method === "GET" && url.pathname === "/") {
+    const forwardedProto = req.headers["x-forwarded-proto"];
+    const protocol =
+      typeof forwardedProto === "string" ? forwardedProto.split(",")[0] : "http";
+    const origin = `${protocol}://${req.headers.host ?? `localhost:${port}`}`;
+
     res.writeHead(200, { "content-type": "text/plain; charset=utf-8" });
     res.end(
       [
         "Townino Local Picks MCP server",
-        `MCP endpoint: http://localhost:${port}${MCP_PATH}`,
-        `Preview: http://localhost:${port}/preview`,
+        `MCP endpoint: ${origin}${MCP_PATH}`,
+        `Preview: ${origin}/preview`,
       ].join("\n")
     );
     return;
